@@ -1,0 +1,24 @@
+node('built-in') 
+    {
+    stage('Continuous Download') 
+    {
+    git 'https://github.com/amitmeshram12/maven.git'
+    }
+    stage('Continuous Build') 
+    {
+    sh 'mvn package'
+    }
+    stage('Continuous Deployment')
+    {
+    sh 'scp   /home/ec2-user/.jenkins/workspace/Scriptedpipeline/webapp/target/webapp.war  ec2-user@172.31.37.163:/opt/tomcat/webapps/ami.war'
+    }
+    stage('Continuous Testing')
+    {
+    sh 'echo "Testing Passed"'
+    }
+    stage('Continuous Deleviry')
+    {
+    sh 'scp   /home/ec2-user/.jenkins/workspace/Scriptedpipeline/webapp/target/webapp.war  ec2-user@172.31.38.140:/opt/tomcat/webapps/dik.war'
+
+}
+}

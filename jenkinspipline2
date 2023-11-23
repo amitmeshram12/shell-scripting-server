@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+    
+    tools {
+        maven 'Maven3'
+    }
+    
+     stages {
+        
+        stage('Git Checkout') {
+            steps {
+            checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GithuB', url: 'https://github.com/amitmeshram12/Demo-app.git']]])
+            }
+        }
+        stage('Unit Testing') {
+            steps {
+            sh 'mvn test'
+            }
+        }
+        stage('Integraition Test') {
+            steps {
+            sh 'mvn verify -DskipUnitTests'
+            }
+        }
+        stage('Maven Build') {
+            steps {
+            sh 'mvn clean install'
+            }
+        }
+        stage ('CODE ANALYSIS WITH CHECKSTYLE'){
+            steps {
+                sh 'mvn checkstyle:checkstyle'
+            }
+            post {
+                success {
+                    echo 'Generated Analysis Result'
+                }
+            }
+        }
+        stage('Code Quality') {
+            steps {
+                script {
+                    withSonarQubeEnv(credentialsId: 'SonarSrvT') {  
+                    sh 'mvn clean package sonar:sonar'
+                    }
+                }        
+            }
+        }    
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+               waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        stage('Nexus ArtifactUploder') {
+            steps {
+                script {
+                    nexusArtifactUploader artifacts: 
+                    [
+                        [
+                            artifactId: 'springboot',
+                            classifier: '', file: 'target/Uber.jar',
+                            type: 'jar'
+                        ]
+                    ],
+                    credentialsId: 'NexusSrvT', 
+                    groupId: 'com.example', 
+                    nexusUrl: '172.31.1.30:8081', 
+                    nexusVersion: 'nexus3', 
+                    protocol: 'http', 
+                    repository: 'demoapp-release', 
+                    version: '1.0.0'
+                    
+                }
+            }
+        }
+    
+     }
+} 
