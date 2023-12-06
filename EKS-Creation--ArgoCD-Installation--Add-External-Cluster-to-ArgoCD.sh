@@ -49,4 +49,10 @@ $ echo XXXXXXX | base64 --decode
 $ argocd login a2255bb2bb33f438d9addf8840d294c5-785887595.ap-south-1.elb.amazonaws.com --username admin
 $ argocd cluster list
 $ kubectl config get-contexts
-$ argocd cluster add i-08b9d0ff0409f48e7@virtualtechbox-cluster.ap-south-1.eksctl.io --name virtualtechbox-eks-cluster
+$ argocd cluster add i-08b9d0ff0409f48e7@virtualtechbox-cluster.ap-south-1.eksctl.io --name vprofile-clus
+
+============================================================= Create NameSpace For Vprofile Appliction ========================================================= 
+kubectl get namespaces
+kubectl create namespace vproapp
+kubectl get events
+
