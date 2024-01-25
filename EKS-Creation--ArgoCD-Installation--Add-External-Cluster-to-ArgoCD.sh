@@ -34,6 +34,16 @@ eksctl create cluster --name vprofile-clus \
 --node-type t2.small \
 --nodes 3 \
 
+# Setup multi availability zones in eks
+eksctl create cluster --name eksctl create cluster --name vprofile-clus \  
+--region ap-south-1 \
+--nodegroup-name my-nodegroup \
+--node-type t3.medium \
+--nodes 2 \
+--nodes-min 1 \
+--nodes-max 3 \
+--availability-zones ap-south-1a,ap-south-1b
+
 ================================================================== ArgoCD Installation =================================================================
 $ kubectl create namespace argocd
 $ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
