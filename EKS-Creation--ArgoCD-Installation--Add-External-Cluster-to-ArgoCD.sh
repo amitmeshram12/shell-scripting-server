@@ -42,7 +42,7 @@ eksctl create cluster --name eksctl create cluster --name vprofile-clus \
 --nodes 2 \
 --nodes-min 1 \
 --nodes-max 3 \
---availability-zones ap-south-1a,ap-south-1b
+--zones ap-south-1a,ap-south-1b
 
 ================================================================== ArgoCD Installation =================================================================
 $ kubectl create namespace argocd
